@@ -2,6 +2,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import { useDispatch } from "react-redux";
 import { themeChange } from "../redux/theme/themeSlice";
 import ChooseColor from "./ChooseColor";
+import html2canvas from "html2canvas";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -56,6 +57,20 @@ function OnePage() {
       dispatch(themeChange("theme1"));
     }
   }
+
+  function download() {
+    html2canvas(document.querySelector('.captureContent'), {
+      backgroundColor: 'none'
+    }).then(canvas => {
+      let link = document.createElement('a');
+      document.body.appendChild(link);
+      link.download = 'image.jpg';
+      link.href = canvas.toDataURL();
+      link.target = '_blank';
+      link.click();
+    });
+ }
+
   return (
     <Page className="page">
       <GlobalStyle />
@@ -63,18 +78,23 @@ function OnePage() {
       <div className="chooseColor">
         <ChooseColor changeTheme={changeTheme} />
       </div>
-      <Box className="container">
-        <Title>
+      <Box className="container captureContent">
+        <Title contentEditable="true">
           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ut dolore
           aliquid iusto dicta.
         </Title>
-        <Description>
+        <Description contentEditable="true">
           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Possimus
           quaerat eum totam illo ipsa ratione nulla, laborum natus, doloremque
           facere repellat odio doloribus placeat, rem laudantium voluptate
           maiores qui! Ut eum accusantium atque tenetur beatae mollitia nobis,
           adipisci cumque obcaecati inventore sint suscipit qui.
         </Description>
+      </Box>
+      <Box className="container">
+        <Button onClick={download}>
+            <span>Take A Capture</span>
+        </Button>
         <a
           href="https://github.com/farukipekcom/react-theme"
           target="_blank"
@@ -99,7 +119,7 @@ function OnePage() {
             <span>Give 5 stars on Github</span>
           </Button>
         </a>
-      </Box>
+        </Box>
     </Page>
   );
 }
